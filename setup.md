@@ -1,5 +1,33 @@
 # Setup TPs Spark MS BGD (2018-2019)
 
+<!-- TOC -->
+
+- [Setup TPs Spark MS BGD (2018-2019)](#setup-tps-spark-ms-bgd-2018-2019)
+    - [Setup TP 1: (MAC et Linux) Installation de Spark](#setup-tp-1-mac-et-linux-installation-de-spark)
+        - [Installation de java](#installation-de-java)
+            - [Sur les machines de TP](#sur-les-machines-de-tp)
+            - [Linux (Ubuntu)](#linux-ubuntu)
+            - [Mac](#mac)
+        - [Installation de Spark](#installation-de-spark)
+            - [Utiliser le Spark-shell](#utiliser-le-spark-shell)
+            - [Réduire la quantité des logs affichés par Spark](#réduire-la-quantité-des-logs-affichés-par-spark)
+    - [Setup TP 2: Installation de SBT, IntelliJ et démarrage du projet](#setup-tp-2-installation-de-sbt-intellij-et-démarrage-du-projet)
+        - [Installation de SBT](#installation-de-sbt)
+            - [Sur les machines de TP](#sur-les-machines-de-tp-1)
+            - [Sur Ubuntu (machine perso : besoin des droits root)](#sur-ubuntu-machine-perso--besoin-des-droits-root)
+            - [Sur Mac](#sur-mac)
+        - [Installation d'IntelliJ](#installation-dintellij)
+            - [Sur les machines de TP](#sur-les-machines-de-tp-2)
+            - [Sur Ubuntu (machines perso : besoin des droits root)](#sur-ubuntu-machines-perso--besoin-des-droits-root)
+            - [Sur Mac](#sur-mac-1)
+        - [(Mac et Linux) Importer le projet (voir TP 2 pour télécharger le template de projet) dans IntelliJ](#mac-et-linux-importer-le-projet-voir-tp-2-pour-télécharger-le-template-de-projet-dans-intellij)
+    - [HOW TO: lancer un job Spark](#how-to-lancer-un-job-spark)
+        - [Compiler et construire le jar](#compiler-et-construire-le-jar)
+        - [Démarrer un cluster Spark local (le driver et le worker seront sur la même machine)](#démarrer-un-cluster-spark-local-le-driver-et-le-worker-seront-sur-la-même-machine)
+        - [Soumettre un Job à Spark](#soumettre-un-job-à-spark)
+
+<!-- /TOC -->
+
 ## Setup TP 1: (MAC et Linux) Installation de Spark
 
 ### Installation de java
@@ -201,7 +229,7 @@ sbt assembly
 L’adresse du jar est donnée vers la fin du script : 
 [info] Packaging /home/max/tp_spark/tp_spark/target/scala-2.11/tp_spark-assembly-1.0.jar
 
-### Démarer un cluster Spark local (le driver et le worker seront sur la même machine)
+### Démarrer un cluster Spark local (le driver et le worker seront sur la même machine)
 
 Dans un terminal :
 ```
