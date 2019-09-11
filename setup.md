@@ -3,7 +3,7 @@
 <!-- TOC -->
 
 - [Setup TPs Spark MS BGD (2018-2019)](#setup-tps-spark-ms-bgd-2018-2019)
-    - [Setup TP 1: (MAC et Linux) Installation de Spark](#setup-tp-1-mac-et-linux-installation-de-spark)
+    - [Setup TP 1: (Mac et Linux) Installation de Spark](#setup-tp-1-mac-et-linux-installation-de-spark)
         - [Installation de java](#installation-de-java)
             - [Sur les machines de TP](#sur-les-machines-de-tp)
             - [Linux (Ubuntu)](#linux-ubuntu)
@@ -28,7 +28,9 @@
 
 <!-- /TOC -->
 
-## Setup TP 1: (MAC et Linux) Installation de Spark
+## Setup TP 1: (Mac et Linux) Installation de Spark
+
+Spark utilise des machines virtuelles java, il faut donc commencer par l'installer.
 
 ### Installation de java
 
@@ -81,7 +83,7 @@ Une fois téléchargé, copier le fichier *.tgz* dans votre répertoire *home* (
 
 #### Utiliser le Spark-shell
 
-Taper dans un terminal :
+Dans le terminal, aller dans le répertoire où spark est installé, puis dans le répertoire *bin*, et lancer le *spark-shell*. Par exemple :
 ```
 cd spark-2.3.3-bin-hadoop2.7/bin
 ./spark-shell
