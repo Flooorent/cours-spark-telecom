@@ -82,7 +82,7 @@ Et une version détaillée de l’API Spark (dans différents langages), la vers
 
 Il est important d’apprendre à se servir de la doc détaillée, elle apporte des informations précieuses. Par exemple dans la page de la classe *DataSet* :
 
-![Capture ecran fonction DataSet.drop](capture_ecran_doc_drop_dataset.png)
+![Capture ecran fonction DataSet.drop](images/capture_ecran_doc_drop_dataset.png)
 
 Cet extrait de la doc nous donne plusieurs informations :
 - un *DataSet* (et donc un *DataFrame*) a une méthode *drop* qu’on peut utiliser en faisant *df.drop(...)*
@@ -96,7 +96,7 @@ Les noms de méthodes en bleus sont cliquables et ouvrent parfois des explicatio
 
 Si vous trouvez une fonction intéressante dans la documentation, le chemin vers la classe qui la contient est indiqué en haut de la page. Par exemple, sur la [page de doc](https://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.sql.functions$) des fonctions *approx_count_distinct*, *lower*, *datediff*, *udf*, etc., on voit :
 
-![Capture ecran package functions](capture_ecran_doc_package_functions.png)
+![Capture ecran package functions](images/capture_ecran_doc_package_functions.png)
 
 C'est utile pour pouvoir utiliser la fonction, car on est obligé de l'**importer** avant de l'utiliser. Pour utiliser la fonction *approx_count_distinct*, il faudrait par exemple faire :
 ```scala
