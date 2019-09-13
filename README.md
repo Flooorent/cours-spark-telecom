@@ -4,7 +4,7 @@ Vous trouverez ici toutes les ressources pour la partie travaux pratiques du cou
 
 Il y a 3 fichiers de TP:
 - [TP_1_spark_shell_et_word_count.md](TP_1_spark_shell_et_word_count.md)
-- TODO: [TP_2_projet_et_pre_processings.md]()
+- TODO: [TP_2_projet_et_pre_processings.md](TP_2_projet_et_pre_processings.md)
 - TODO: [TP_3_machine_learning_avec_spark.md]()
 
 Ce sont les fichiers qu'on utilisera lors des séances de TP.
