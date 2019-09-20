@@ -3,13 +3,14 @@
 <!-- TOC -->
 
 - [TP 3 : Machine learning avec Spark](#tp-3--machine-learning-avec-spark)
-    - [Charger le DataFrame.](#charger-le-dataframe)
-    - [Utiliser les données textuelles](#utiliser-les-données-textuelles)
+    - [Introduction](#introduction)
+    - [Chargement du DataFrame.](#chargement-du-dataframe)
+    - [Utilisation des données textuelles](#utilisation-des-données-textuelles)
         - [Stage 1 : récupérer les mots des textes](#stage-1--récupérer-les-mots-des-textes)
         - [Stage 2 : retirer les stop words](#stage-2--retirer-les-stop-words)
         - [Stage 3 : computer la partie TF](#stage-3--computer-la-partie-tf)
         - [Stage 4 : computer la partie IDF](#stage-4--computer-la-partie-idf)
-    - [Convertir les catégories en données numériques](#convertir-les-catégories-en-données-numériques)
+    - [Conversion des variables catégorielles en variables numériques](#conversion-des-variables-catégorielles-en-variables-numériques)
         - [Stage 5 : convertir *country2* en quantités numériques](#stage-5--convertir-country2-en-quantités-numériques)
         - [Stage 6 : convertir *currency2* en quantités numériques](#stage-6--convertir-currency2-en-quantités-numériques)
         - [Stages 7 et 8: One-Hot encoder ces deux catégories](#stages-7-et-8-one-hot-encoder-ces-deux-catégories)
@@ -25,7 +26,9 @@
 
 <!-- /TOC -->
 
-Dans cette partie du TP, on veut créer un modèle de classification entraîné sur les données qui ont été pré-traitées dans les TPs précédents. Pour que tout le monde reparte du même point, téléchargez le dataset *prepared_trainingset* (ce sont des fichiers parquet) situé dans le répertoire *data*.
+## Introduction
+
+Dans cette partie du TP, on veut créer un modèle de classification entraîné sur les données qui ont été pré-traitées dans les TPs précédents. Pour que tout le monde reparte du même point, téléchargez le dataset *prepared_trainingset* (ce sont des fichiers parquet) situé dans le répertoire [*data*](data).
 
 Pour cette partie du TP, veuillez codez dans l’objet *Trainer*, cela vous évitera de refaire les préprocessings des TPs précédents à chaque run. Pour lancer l'exécution du script Trainer faites dans un terminal à la racine du projet
 ```bash
@@ -40,11 +43,11 @@ Comme dans [*scikit-learn*](https://scikit-learn.org/stable/), un pipeline dans 
 
 Nous allons utiliser les modules *spark.ml.feature*, *spark.ml.classification*, *spark.ml.evaluation*, *spark.ml.tuning*, et la classe *spark.ml.Pipeline*.
 
-## Charger le DataFrame.
+## Chargement du DataFrame.
 
 Chargez le DataFrame obtenu à la fin du TP 2.
  
-## Utiliser les données textuelles
+## Utilisation des données textuelles
 
 Les textes ne sont pas utilisables tels quels par les algorithmes parce qu’ils ont besoin de données numériques, en particulier pour faire les calculs d’erreurs et d’optimisation. On veut donc convertir la colonne "text" en données numériques. Une façon très répandu de faire cela est d’appliquer l’algorithme [TF-IDF](https://fr.wikipedia.org/wiki/TF-IDF).
 
@@ -71,7 +74,7 @@ La partie TF de TF-IDF est faite avec la classe *CountVectorizer*.
 
 Trouvez la partie IDF. On veut écrire l’output de cette étape dans une colonne "tfidf". Vous pouvez vous aider de la page [Feature extraction](http://scikit-learn.org/stable/modules/feature_extraction.html#text-feature-extraction) de scikit-learn. 
 
-## Convertir les catégories en données numériques
+## Conversion des variables catégorielles en variables numériques
 
 Les colonnes *country2* et *currency2* sont des variables catégorielles (qui ne prennent qu’un ensemble limité de valeurs), par opposition aux variables continues comme *goal* ou *hours_prepa* qui peuvent prendre n’importe quelle valeur réelle positive. Ici les catégories sont indiquées par une chaîne de charactères, e.g. "US" ou "EUR". On veut convertir ces classes en quantités numériques.
 
