@@ -30,7 +30,7 @@
 
 Dans cette partie du TP, on veut créer un modèle de classification entraîné sur les données qui ont été pré-traitées dans les TPs précédents. Pour que tout le monde reparte du même point, téléchargez le dataset *prepared_trainingset* (ce sont des fichiers parquet) situé dans le répertoire [*data*](data).
 
-Pour cette partie du TP, veuillez codez dans l’objet *Trainer*, cela vous évitera de refaire les préprocessings des TPs précédents à chaque run. Pour lancer l'exécution du script Trainer faites dans un terminal à la racine du projet
+Pour cette partie du TP, veuillez coder dans l’objet *Trainer*, cela vous évitera de refaire les preprocessings des TPs précédents à chaque run. Pour lancer l'exécution du script Trainer, tappez dans un terminal à la racine du projet :
 ```bash
 ./build_and_submit.sh Trainer
 ```
@@ -45,16 +45,17 @@ Nous allons utiliser les modules *spark.ml.feature*, *spark.ml.classification*, 
 
 ## Chargement du DataFrame.
 
-Chargez le DataFrame obtenu à la fin du TP 2.
+Charger le DataFrame obtenu à la fin du TP 2.
  
 ## Utilisation des données textuelles
 
-Les textes ne sont pas utilisables tels quels par les algorithmes parce qu’ils ont besoin de données numériques, en particulier pour faire les calculs d’erreurs et d’optimisation. On veut donc convertir la colonne "text" en données numériques. Une façon très répandu de faire cela est d’appliquer l’algorithme [TF-IDF](https://fr.wikipedia.org/wiki/TF-IDF).
+Les textes ne sont pas utilisables tels quels par les algorithmes parce qu’ils ont besoin de données numériques, en particulier pour les calculs d’erreurs et d’optimisation. On veut donc convertir la colonne "text" en données numériques. Une façon très répandue de faire cela est d’appliquer l’algorithme [TF-IDF](https://fr.wikipedia.org/wiki/TF-IDF).
 
 ### Stage 1 : récupérer les mots des textes
 
-La première étape est de séparer les textes en mots (ou tokens) avec un tokenizer. Vous allez donc construire le premier stage du pipeline de la façon suivante :
+La première étape est de séparer les textes en mots (ou tokens) avec un tokenizer. Construire le premier stage du pipeline de la façon suivante :
 ```scala
+// TODO: dire ce que fait chaque ligne
 val tokenizer = new RegexTokenizer()
   .setPattern("\\W+")
   .setGaps(true)
@@ -64,7 +65,7 @@ val tokenizer = new RegexTokenizer()
 
 ### Stage 2 : retirer les stop words
 
-On veut retirer les stop words pour ne pas encombrer le modèle avec des mots qui ne véhiculent pas de sens. Créer le 2ème stage avec la classe *StopWordsRemover*.
+On veut retirer les [*stop words*](https://en.wikipedia.org/wiki/Stop_words) pour ne pas encombrer le modèle avec des mots qui ne véhiculent pas de sens. Créer le 2ème stage avec la classe *StopWordsRemover*.
 
 ### Stage 3 : computer la partie TF
 
@@ -72,11 +73,11 @@ La partie TF de TF-IDF est faite avec la classe *CountVectorizer*.
 
 ### Stage 4 : computer la partie IDF
 
-Trouvez la partie IDF. On veut écrire l’output de cette étape dans une colonne "tfidf". Vous pouvez vous aider de la page [Feature extraction](http://scikit-learn.org/stable/modules/feature_extraction.html#text-feature-extraction) de scikit-learn. 
+Trouver la partie IDF. On veut écrire l’output de cette étape dans une colonne *tfidf*. La page [Feature extraction](http://scikit-learn.org/stable/modules/feature_extraction.html) de scikit-learn a un paragraphe sur TF-IDF.
 
 ## Conversion des variables catégorielles en variables numériques
 
-Les colonnes *country2* et *currency2* sont des variables catégorielles (qui ne prennent qu’un ensemble limité de valeurs), par opposition aux variables continues comme *goal* ou *hours_prepa* qui peuvent prendre n’importe quelle valeur réelle positive. Ici les catégories sont indiquées par une chaîne de charactères, e.g. "US" ou "EUR". On veut convertir ces classes en quantités numériques.
+Les colonnes *country2* et *currency2* sont des variables catégorielles (qui ne prennent qu’un ensemble limité de valeurs, ces valeurs n'ayant, ici, aucune notion d'ordre entre elles), par opposition aux variables continues comme *goal* ou *hours_prepa* qui peuvent prendre n’importe quelle valeur réelle positive. Ici les catégories sont indiquées par une chaîne de charactères, e.g. "US" ou "EUR". On veut convertir ces classes en quantités numériques.
 
 ### Stage 5 : convertir *country2* en quantités numériques
 
@@ -112,7 +113,7 @@ Assembler les features *tfidf*, *days_campaign*, *hours_prepa*, *goal*, *country
 
 ### Stage 10 : créer/instancier le modèle de classification
 
-Il s’agit d’une régression logistique que vous définirez de la façon suivante :
+Il s’agit d’une régression logistique qu'on définit de la façon suivante :
 ```scala
 val lr = new LogisticRegression()
   .setElasticNetParam(0.0)
@@ -142,12 +143,11 @@ Créer un DataFrame nommé *training* et un autre nommé *test* à partir du Dat
 ### Entraînement du classifieur et réglage des hyper-paramètres
 
 Le classifieur que nous utilisons est une [régression logistique]( 
-http://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.ml.classification.LogisticRegression)
-(que vous verrez en cours cette année) avec une régularisation dans la fonction de coût qui permet de pénaliser les features les moins fiables pour la classification.
+http://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.ml.classification.LogisticRegression) avec une régularisation dans la fonction de coût qui permet de pénaliser les features les moins fiables pour la classification.
 
-L’importance de la régularisation est contrôlée par un hyper-paramètre du modèle qu’il faut régler à la main. La plupart des algorithmes de machine learning possèdent des hyper-paramètres, par exemple le nombre de neurones dans un réseau de neurones, le nombre d’arbres et leur profondeur maximale dans les random forests, etc.
-Par ailleurs la classe *CountVectorizer* dans le 3ème stage a un paramètre *minDF* qui permet de ne prendre que les mots apparaissant dans au moins le nombre spécifié par minDF de documents. C’est aussi un hyperparamètre du modèle que nous voulons régler.
-Une des techniques pour régler automatiquement les hyper-paramètres est la *grid search* qui consiste à: 
+L’importance de la régularisation est contrôlée par un hyper-paramètre du modèle qu’il faut régler à la main. La plupart des algorithmes de machine learning possèdent des hyper-paramètres, par exemple le nombre de couches et de neurones dans un réseau de neurones, le nombre d’arbres et leur profondeur maximale dans les random forests, etc.
+Par ailleurs la classe *CountVectorizer* dans le 3ème stage a un paramètre *minDF* qui permet de ne prendre que les mots apparaissant dans au moins minDF documents. C’est aussi un hyperparamètre du modèle que nous voulons régler.
+Une des techniques pour régler automatiquement les hyper-paramètres est la *grid search* qui consiste à :
 - créer une grille de valeurs à tester pour les hyper-paramètres
 - en chaque point de la grille, séparer le training set en un ensemble de training (70%) et un ensemble de validation (30%), entraîner un modèle sur le training set, puis calculer l’erreur du modèle sur le validation set
 - sélectionner le point de la grille (<=> garder les valeurs d’hyper-paramètres de ce point) où l’erreur de validation est la plus faible i.e. là où le modèle a le mieux appris
@@ -155,13 +155,11 @@ Une des techniques pour régler automatiquement les hyper-paramètres est la *gr
 Pour la régularisation de notre régression logistique on veut tester les valeurs de 10e-8 à 10e-2 par pas de 2.0 en échelle logarithmique (on veut tester les valeurs 10e-8, 10e-6, 10e-4 et 10e-2).
 Pour le paramètre minDF de CountVectorizer on veut tester les valeurs de 55 à 95 par pas de 20. 
 En chaque point de la grille on veut utiliser 70% des données pour l’entraînement et 30% pour la validation.
-On veut utiliser le [*f1-score*](https://en.wikipedia.org/wiki/F1_score) pour comparer les différents modèles en chaque point de la grille. Cherchez cette métrique dans *ml.evaluation*.
+On veut utiliser le [*f1-score*](https://en.wikipedia.org/wiki/F1_score) pour comparer les différents modèles en chaque point de la grille. Chercher cette métrique dans *ml.evaluation*.
 
 Préparer la grid-search pour satisfaire les conditions explicitées ci-dessus puis lancer la grid-search sur le dataset "training" préparé précédemment.
 
 ### Test du modèle
-
-Tester le modèle obtenu sur les données test
 
 Pour évaluer de façon non biaisée la pertinence du modèle obtenu, il faut le tester sur des données :
 - que le modèle n’a jamais vu pendant son entraînement
@@ -169,7 +167,7 @@ Pour évaluer de façon non biaisée la pertinence du modèle obtenu, il faut le
 
 C’est pour cela que nous avons construit le dataset de test que nous avons laissé de côté jusque là. 
 
-Appliquer le meilleur modèle trouvé avec la grid-search aux données de test. Mettre les résultats dans le dataFrame `df_WithPredictions`. Afficher le f1-score du modèle sur les données de test.
+Appliquer le meilleur modèle trouvé avec la grid-search aux données de test. Mettre les résultats dans le DataFrame `df_WithPredictions`. Afficher le f1-score du modèle sur les données de test.
 
 Afficher
 ```scala
