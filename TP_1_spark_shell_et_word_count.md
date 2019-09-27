@@ -100,7 +100,7 @@ sans le prompt *scala>*.
 
 ## SparkContext vs SparkSession
 
-Avant la version 2.0 de Spark, le point d’entrée principal des fonctionnalités de Spark et en particulier des RDDs était le [*SparkContext*](https://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.SparkContext). Depuis la version 2.0, c'est avant tout le [*SparkSession*](https://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.sql.SparkSession), qui permet entre autres d'utiliser les DataFrames et DataSets.
+Avant la version 2.0 de Spark, le point d’entrée principal des fonctionnalités de Spark et en particulier des RDDs était le [*SparkContext*](https://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.SparkContext). Depuis la version 2.0, c'est avant tout le [*SparkSession*](https://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.sql.SparkSession), qui permet entre autres d'utiliser les DataFrames et Datasets.
 
 Tout ce qui est faisable avec un SparkContext est faisable avec un SparkSession, l'inverse est faux. Le SparkContext reste accessible surtout pour des raisons de backward compatibility. A l'avenir, dans vos projets, privilégiez toujours le SparkSession.
 
@@ -112,7 +112,7 @@ Dans le spark-shell, un SparkContext est automatiquement créé pour vous et est
 
 Chargez le fichier `README.md`, qui se trouve dans votre dossier Spark, dans un RDD (le chemin vers le fichier sera très probablement différent du mien, utilisez le bon) :
 ```scala
-scala> val rdd = sc.textFile("/Users/florentmoiny/Documents/packages/spark-2.1.1-bin-hadoop2.7/README.md")
+scala> val rdd = sc.textFile("/Users/flo/Documents/packages/spark-2.3.4-bin-hadoop2.7/README.md")
 ```
 
 Affichez les 5 premières lignes du fichier :
@@ -183,7 +183,7 @@ Spark
 
 Spark
 ```
-La ligne `.map(word => (word, 1))` se charge simplement, pour chaque ligne de notre RDD, de remplacer le mot par un tuple de 2 éléments (mot, 1). Dans le cas d'un RDD avec un tuple de 2 éléments, Spark considère que le premier élément est la "key" et la second élément la "value". Le 1 est nécessaire pour pouvoir compter par la suite le nombre d'occurences de chaque mot.
+La ligne `.map(word => (word, 1))` se charge simplement, pour chaque ligne de notre RDD, de remplacer le mot par un tuple de 2 éléments (mot, 1). Dans le cas d'un RDD avec un tuple de 2 éléments, Spark considère que le premier élément est la "key" et le second élément la "value". Le 1 est nécessaire pour pouvoir compter par la suite le nombre d'occurences de chaque mot.
 
 La ligne `.reduceByKey((i, j) => i + j)` (notez l'utilisation du mot "Key" qui fait référence au premier élément du tuple de chaque ligne) se charge de sommer tous les 1 pour chaque mot, ce qui revient à compter le nombre de fois où chaque mot apparait. Si vous regardez la [doc d'un RDD](https://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.rdd.RDD), vous remarquerez que la fonction *reduceByKey* n'est pas présente, et pourtant on a bien pu l'utiliser. Ceci est dû au fait que pour tous les RDD de (key, value) paires, toutes les fonctions de la classe [*PairRDDFunctions*](https://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.rdd.PairRDDFunctions) sont disponibles par conversion implicite (i.e. par conversion automatique par Spark d'un RDD de (key, value) paires en un PairRDDFunctions).
 
@@ -192,7 +192,7 @@ La ligne `.reduceByKey((i, j) => i + j)` (notez l'utilisation du mot "Key" qui f
 Pour info, vous pouvez obtenir le type d'un objet en tapant simplement le nom de l'objet dans le shell :
 ```scala
 scala> rdd
-res15: org.apache.spark.rdd.RDD[String] = /Users/florentmoiny/Documents/packages/spark-2.1.1-bin-hadoop2.7/README.md MapPartitionsRDD[1] at textFile at <console>:24
+res15: org.apache.spark.rdd.RDD[String] = /Users/flo/Documents/packages/spark-2.3.4-bin-hadoop2.7/README.md MapPartitionsRDD[1] at textFile at <console>:24
 
 scala> flattenedRdd
 res16: org.apache.spark.rdd.RDD[String] = MapPartitionsRDD[6] at flatMap at <console>:26
@@ -253,11 +253,11 @@ L'output :
 
 Maintenant qu'on a vu les bases de la manipulation d'un RDD, regardons ce que ça donne avec un DataFrame.
 
-Pour rappel, on doit passer par un *SparkSession* pour pouvoir utiliser des DataFrames (et DataSets). Dans le spark-shell un SparkSession est automatiquement créé pour vous et est accessible en tapant `spark`.
+Pour rappel, on doit passer par un *SparkSession* pour pouvoir utiliser des DataFrames (et Datasets). Dans le spark-shell un SparkSession est automatiquement créé pour vous et est accessible en tapant `spark`.
 
-Lecture du fichier et affichage des 5 premières lignes:
+Lecture du fichier et affichage des 5 premières lignes :
 ```scala
-scala> val df = spark.read.text("/Users/florentmoiny/Documents/packages/spark-2.1.1-bin-hadoop2.7/README.md")
+scala> val df = spark.read.text("/Users/flo/Documents/packages/spark-2.3.4-bin-hadoop2.7/README.md")
 
 scala> df.show(5)
 +--------------------+

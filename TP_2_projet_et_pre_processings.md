@@ -38,7 +38,7 @@ Suivre la section [Setup TP 2](setup.md#setup-tp-2-installation-de-sbt-intellij-
 
 ### Charger le template du projet dans IntelliJ
 
-Téléchargez le template de projet Spark *spark_project_kickstarter_2019-2020* puis importez-le dans IntelliJ :
+Téléchargez le template de projet Spark *spark_project_kickstarter_2019_2020* puis importez-le dans IntelliJ :
 - Ouvrez IntelliJ, dans la page d'accueil cliquez sur "import project". 
 - Sélectionnez le chemin vers le projet décompressé.
 - Sélectionnez "import project from external model", et sélectionner SBT 
@@ -54,7 +54,7 @@ Téléchargez le template de projet Spark *spark_project_kickstarter_2019-2020* 
 
 Pour exécuter un script Spark/scala, il faut le compiler et en faire un "jar" i.e. un fichier exécutable sur la machine virtuelle java. La compilation d’un script en scala peut se faire avec SBT (équivalent de maven pour java). L'exécutable doit ensuite être lancé sur le cluster Spark via la commande spark-submit. 
 
-Pour simplifier les choses un script bash *build_and_submit.sh* est fourni dans le template de projet Spark. Pour que ce script fonctionne, vous devez avoir le dossier spark-2.2.0-bin-hadoop2.7 dans votre répertoire HOME. 
+Pour simplifier les choses un script bash *build_and_submit.sh* est fourni dans le template de projet Spark. Pour que ce script fonctionne, vous devez avoir le dossier spark-2.3.4-bin-hadoop2.7 dans votre répertoire HOME. 
 
 (Pour voir plus en détail la procédure complète pour soumettre un Job à un cluster Spark, reportez-vous à la section [HOW TO: lancer un job Spark](setup.md#how-to-lancer-un-job-spark) du fichier `setup.md`)
 
@@ -95,7 +95,7 @@ val df: DataFrame = spark
   .read
   .option("header", true) // utilise la première ligne du (des) fichier(s) comme header
   .option("inferSchema", "true") // pour inférer le type de chaque colonne (Int, String, etc.)
-  .csv("/Users/maxime/TP_parisTech_2017_2018/data/train_clean.csv")
+  .csv("/Users/flo/Documents/github/cours-spark-telecom/data/train_clean.csv"")
 ```
 
 Affichez le nombre de lignes et le nombre de colonnes dans le DataFrame :
@@ -174,7 +174,7 @@ val dfNoFutur: DataFrame = df2.drop("backers_count", "state_changed_at")
 
 On pourrait penser que les colonnes *currency* et *country* sont redondantes, auquel cas on pourrait enlever une des colonnes. Mais c'est oublier par exemple que tous les pays de la zone euro ont la même monnaie ! Il faut donc garder les deux colonnes.
 
-Il semble y avoir des inversions entre ces deux colonnes et du nettoyage à faire. On remarque en particulier que lorsque `country = False` le country à l'air d'être dans currency. On le voit avec la commande
+Il semble y avoir des inversions entre ces deux colonnes et du nettoyage à faire. On remarque en particulier que lorsque `country = "False"` le country à l'air d'être dans currency. On le voit avec la commande
 ```scala
 df.filter($"country" === "False")
   .groupBy("currency")
@@ -184,7 +184,7 @@ df.filter($"country" === "False")
 ```
 
 Créez deux udfs nommées *udf_country* et *udf_currency* telles que :
-- *cleanCountry* : si `country = False` prendre la valeur de currency, sinon si country est une chaîne de caractères de taille autre que 2 remplacer par *null*, et sinon laisser la valeur country actuelle. On veut les résultat dans une nouvelle colonne *country2*.
+- *cleanCountry* : si `country = "False"` prendre la valeur de currency, sinon si country est une chaîne de caractères de taille autre que 2 remplacer par *null*, et sinon laisser la valeur country actuelle. On veut les résultat dans une nouvelle colonne *country2*.
 - *cleanCurrency* : si `currency.length != 3` currency prend la valeur *null*, sinon laisser la valeur currency actuelle. On veut les résultats dans une nouvelle colonne *currency2*. 
 ```scala
 def cleanCountry(country: String, currency: String): String = {

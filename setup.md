@@ -49,11 +49,7 @@ Cette commande affiche la version de java qui est installée: la version 1.7 ou 
 
 Vous devez avoir les droits root.
 
-Option 1: Installation manuelle
-
-Allez sur http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html. Dans *Java SE Development Kit 8u181* choisissez la version à dowloader qui vous correspond. Puis installer le paquet downloadé.
-
-Option 2: Dans un terminal :
+Option 1 : Dans un terminal
 
 ```
 sudo add-apt-repository ppa:webupd8team/java
@@ -61,7 +57,15 @@ sudo apt-get update
 sudo apt-get install oracle-java8-installer
 ```
 
+Option 2 : Installation manuelle
+
+Allez sur http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html. Dans *Java SE Development Kit 8u181* choisissez la version à dowloader qui vous correspond. Puis installer le paquet downloadé.
+
 #### Mac
+
+Option 1 : Dans un terminal
+
+Option 2 : Installation manuelle
 
 Allez sur http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html. Dans *Java SE Development Kit 8u181*, télécharger le fichier *.dmg* pour mac, puis l’installer.
 
@@ -75,9 +79,9 @@ Puis fermer et réouvrir le terminal pour que la modification soit effective.
 ### Installation de Spark
 
 Aller sur http://spark.apache.org/downloads.html puis :
-- Spark release : 2.3.3
+- Spark release : 2.3.4
 - Package type : pre-built for apache hadoop 2.7 and later
-- cliquer sur le lien : spark-2.3.3-bin-hadoop2.7.tgz
+- cliquer sur le lien : spark-2.3.4-bin-hadoop2.7.tgz
 
 Une fois téléchargé, copier le fichier *.tgz* dans votre répertoire *home* (dans un terminal entrez: `echo $HOME` pour savoir où est votre *home*). Puis décompresser le fichier *.tgz*, et c’est tout !
 
@@ -85,7 +89,7 @@ Une fois téléchargé, copier le fichier *.tgz* dans votre répertoire *home* (
 
 Dans le terminal, aller dans le répertoire où spark est installé, puis dans le répertoire *bin*, et lancer le *spark-shell*. Par exemple :
 ```
-cd spark-2.3.3-bin-hadoop2.7/bin
+cd spark-2.3.4-bin-hadoop2.7/bin
 ./spark-shell
 ```
 
@@ -97,7 +101,7 @@ Il faut tout d'abord copier le fichier de configuration des logs par défaut *lo
 
 Dans un terminal :
 ```
-cd spark-2.3.3-bin-hadoop2.7/conf
+cd spark-2.3.4-bin-hadoop2.7/conf
 cp log4j.properties.template log4j.properties
 ```
 
@@ -235,7 +239,7 @@ L’adresse du jar est donnée vers la fin du script :
 
 Dans un terminal :
 ```
-cd spark-2.2.0-bin-hadoop2.7/sbin # attention c’est bien “sbin”
+cd spark-2.3.4-bin-hadoop2.7/sbin # attention c’est bien “sbin”
 ./start-all.sh
 ```
 
@@ -259,7 +263,7 @@ Soumettre le jar du script qui a été compilé:
 
 Dans un terminal :
 ```
-cd spark-2.2.0-bin-hadoop2.7/bin # !!!! Attention c’est bien “bin” maintenant
+cd spark-2.3.4-bin-hadoop2.7/bin # !!!! Attention c’est bien “bin” maintenant
 
 ./spark-submit \
 --driver-memory 3G \
