@@ -7,6 +7,7 @@
         - [Installation de java](#installation-de-java)
             - [Sur les machines de TP](#sur-les-machines-de-tp)
             - [Linux (Ubuntu)](#linux-ubuntu)
+            - [Linux (CentOS)](#linux-centos)
             - [Mac](#mac)
         - [Installation de Spark](#installation-de-spark)
             - [Utiliser le Spark-shell](#utiliser-le-spark-shell)
@@ -20,7 +21,7 @@
             - [Sur les machines de TP](#sur-les-machines-de-tp-2)
             - [Sur Ubuntu (machines perso : besoin des droits root)](#sur-ubuntu-machines-perso--besoin-des-droits-root)
             - [Sur Mac](#sur-mac-1)
-        - [(Mac et Linux) Importer le projet (voir TP 2 pour télécharger le template de projet) dans IntelliJ](#mac-et-linux-importer-le-projet-voir-tp-2-pour-télécharger-le-template-de-projet-dans-intellij)
+        - [Importer le projet (voir TP 2 pour télécharger le template de projet) dans IntelliJ](#importer-le-projet-voir-tp-2-pour-télécharger-le-template-de-projet-dans-intellij)
     - [HOW TO: lancer un job Spark](#how-to-lancer-un-job-spark)
         - [Compiler et construire le jar](#compiler-et-construire-le-jar)
         - [Démarrer un cluster Spark local (le driver et le worker seront sur la même machine)](#démarrer-un-cluster-spark-local-le-driver-et-le-worker-seront-sur-la-même-machine)
@@ -43,7 +44,18 @@ Dans un terminal, entrez :
 java -version
 ```
 
-Cette commande affiche la version de java qui est installée: la version 1.7 ou 1.8 doit déjà être installée.
+Cette commande affiche la version de java qui est installée : la version 1.7 ou 1.8 doit déjà être installée.
+
+Il faut désormais setter notre java home. Dans un terminal :
+```
+update-alternatives --config java
+```
+
+Le path dans la colonne "Commande" est ce qui nous intéresse (en enlevant la partie */bin/java* à la fin). Ajouter ensuite la ligne suivante dans le fichier *.bash_profile* situé dans notre *home* :
+```
+export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.222.b10-0.amzn2.0.1.x86_64/jre
+```
+(utiliser le path qui s'affiche dans votre terminal et qui n'est peut-être pas le même).
 
 #### Linux (Ubuntu)
 
@@ -61,9 +73,47 @@ Option 2 : Installation manuelle
 
 Allez sur http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html. Dans *Java SE Development Kit 8u181* choisissez la version à dowloader qui vous correspond. Puis installer le paquet downloadé.
 
+Il faut désormais setter notre java home. Dans un terminal :
+```
+update-alternatives --config java
+```
+
+Le path dans la colonne "Commande" est ce qui nous intéresse (en enlevant la partie */bin/java* à la fin). Ajouter ensuite la ligne suivante dans le fichier *.bash_profile* situé dans notre *home* :
+```
+export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.222.b10-0.amzn2.0.1.x86_64/jre
+```
+(utiliser le path qui s'affiche dans votre terminal et qui n'est peut-être pas le même).
+
+#### Linux (CentOS)
+
+Dans un terminal :
+```
+sudo yum -y update
+sudo yum -y install java-1.8.0-openjdk
+update-alternatives --config java
+```
+
+Le path dans la colonne "Commande" est ce qui nous intéresse (en enlevant la partie */bin/java* à la fin). Ajouter ensuite la ligne suivante dans le fichier *.bash_profile* situé dans notre *home* :
+```
+export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.222.b10-0.amzn2.0.1.x86_64/jre
+```
+(utiliser le path qui s'affiche dans votre terminal et qui n'est peut-être pas le même).
+
 #### Mac
 
 Option 1 : Dans un terminal
+
+De façon générale, pour installer n'importe quel software via le terminal avec un Mac, il est préférable de passer par [*Brew*](https://brew.sh/) :
+```
+/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+brew tap caskroom/cask
+```
+
+Pour installer java 1.8 :
+```
+brew tap adoptopenjdk/openjdk
+brew cask install adoptopenjdk8
+```
 
 Option 2 : Installation manuelle
 
@@ -78,12 +128,23 @@ Puis fermer et réouvrir le terminal pour que la modification soit effective.
 
 ### Installation de Spark
 
+Option 1 : Dans le terminal
+
+Allez dans la home, téléchargez spark, puis décompressez-le :
+```
+cd
+wget http://ftp.tudelft.nl/apache/spark/spark-2.3.4/spark-2.3.4-bin-hadoop2.7.tgz
+tar -xvzf spark-2.3.4-bin-hadoop2.7.tgz
+```
+
+Option 2 : Installation manuelle
+
 Aller sur http://spark.apache.org/downloads.html puis :
 - Spark release : 2.3.4
 - Package type : pre-built for apache hadoop 2.7 and later
 - cliquer sur le lien : spark-2.3.4-bin-hadoop2.7.tgz
 
-Une fois téléchargé, copier le fichier *.tgz* dans votre répertoire *home* (dans un terminal entrez: `echo $HOME` pour savoir où est votre *home*). Puis décompresser le fichier *.tgz*, et c’est tout !
+Une fois téléchargé, copier le fichier *.tgz* dans votre répertoire *home* (dans un terminal entrez: `echo $HOME` pour savoir où est votre *home*). Puis décompresser le fichier *.tgz*.
 
 #### Utiliser le Spark-shell
 
@@ -178,7 +239,7 @@ Une fois IntelliJ installé, aller dans les “préférences” puis dans “plu
 
 Download : https://www.jetbrains.com/idea/.
 
-Décompresser IntelliJ
+Décompresser IntelliJ.
 
 Dans un terminal :
 ```
@@ -198,6 +259,14 @@ Une fois IntelliJ installé, aller dans les “préférences” puis dans “plu
 
 #### Sur Mac
 
+Option 1 : Dans le terminal
+
+```
+brew cask install intellij-idea-ce
+```
+
+Option 2 : Installation manuelle
+
 Download : https://www.jetbrains.com/idea/.
 
 Télécharger le fichier *.dmg*, l’installer.
@@ -212,9 +281,9 @@ Lancer IntelliJ, dans la fenêtre qui s’ouvre faire:
 
 Une fois IntelliJ installé, aller dans les “préférences” puis dans “plugins”. Dans la barre de recherche de plugins, chercher “scala” et installer le plugins (s'il ne l’est pas déjà)
 
-### (Mac et Linux) Importer le projet (voir TP 2 pour télécharger le template de projet) dans IntelliJ
+### Importer le projet (voir TP 2 pour télécharger le template de projet) dans IntelliJ
 
-Ouvrir IntelliJ :
+Ouvrir IntelliJ puis :
 - Import project
 - Import project from external model, et choisir SBT
 - sélectionner tp_spark/tp_spark
