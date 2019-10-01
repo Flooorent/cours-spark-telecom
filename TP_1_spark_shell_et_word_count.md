@@ -160,7 +160,7 @@ Pour rappel, chaque ligne de notre RDD correspond à une ligne de notre fichier.
 scala> rdd.count
 res8: Long = 104
 ```
-104 mots.
+104 lignes.
 
 La ligne `.flatMap(line => line.split(" "))` fait deux choses ici. On a d'abord une phase de *map* qui va créer un *Array* de mots pour chaque ligne de notre RDD (via la fonction *split*) puis une phase de *flatten* (d'où *flatMap*) qui se charge d'"exploser" chaque Array et de créer une ligne par mot pour chaque mot de chaque Array :
 ```scala
