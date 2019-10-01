@@ -9,10 +9,15 @@
         - [Autocomplétion](#autocomplétion)
         - [Les commandes magiques](#les-commandes-magiques)
     - [SparkContext vs SparkSession](#sparkcontext-vs-sparksession)
-    - [Lire un fichier de données non structurées via un RDD](#lire-un-fichier-de-données-non-structurées-via-un-rdd)
     - [Word count avec un RDD](#word-count-avec-un-rdd)
+        - [Lire un fichier de données non structurées via un RDD](#lire-un-fichier-de-données-non-structurées-via-un-rdd)
+        - [Word count](#word-count)
         - [Digression : types des variables](#digression--types-des-variables)
+        - [Mots les plus fréquents](#mots-les-plus-fréquents)
     - [Word count avec un DataFrame](#word-count-avec-un-dataframe)
+    - [Bonus : Persistance et partitions](#bonus--persistance-et-partitions)
+        - [Persistance](#persistance)
+        - [Nombre de partitions](#nombre-de-partitions)
 
 <!-- /TOC -->
 
@@ -104,9 +109,11 @@ Avant la version 2.0 de Spark, le point d’entrée principal des fonctionnalit�
 
 Tout ce qui est faisable avec un SparkContext est faisable avec un SparkSession, l'inverse est faux. Le SparkContext reste accessible surtout pour des raisons de backward compatibility. A l'avenir, dans vos projets, privilégiez toujours le SparkSession.
 
-## Lire un fichier de données non structurées via un RDD
+## Word count avec un RDD
 
 On veut travailler ici avec des RDDs qui sont la structure sous-jacente des DataFrames et Datasets. En principe vous utiliserez presque toujours des DataFrames pour vos projets Spark, mais il est intéressant d’avoir vu les RDDs non seulement pour comprendre comment fonctionne Spark avec les données mais aussi parce que vous trouverez peut-être en entreprise des projets Spark sur d’anciennes versions qui utilisent uniquement des RDDs.
+
+### Lire un fichier de données non structurées via un RDD
 
 Dans le spark-shell, un SparkContext est automatiquement créé pour vous et est accessible en tapant `sc`. Cet objet possède une fonction *textFile* qui permet de lire un fichier et de récupérer le résultat dans un RDD (lire la [doc de la fonction](https://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.SparkContext@textFile(path:String,minPartitions:Int):org.apache.spark.rdd.RDD[String]) est toujours une bonne idée).
 
@@ -127,7 +134,7 @@ supports general computation graphs for data analysis. It also supports a
 
 **Explication** : la fonction *take* d'un RDD prend en paramètre le nombre d'éléments du RDD qu'on veut garder (les *n* premiers éléments) et renvoie un [*Array*](https://www.scala-lang.org/api/current/scala/Array.html), qui est une structure de données de base en Scala, contenant ces *n* éléments. Comme mentionné dans la doc, un Array possède la fonction *foreach* qui permet d'appliquer à chaque élément n'importe quelle fonction. On choisit ici d'utiliser la fonction *println* qui permet d'afficher une valeur dans le terminal (c'est l'équivalent du *print* en python). Les 5 lignes de l'output correspondent donc aux 5 premières lignes du fichier.
 
-## Word count avec un RDD
+### Word count
 
 Comptons désormais le nombre de mots dans le fichier et affichons les 10 premières lignes du résultat :
 ```scala
@@ -203,6 +210,8 @@ reducedRdd: org.apache.spark.rdd.RDD[(String, Int)] = ShuffledRDD[11] at reduceB
 On voit par exemple que le type de *flattenedRdd* est *org.apache.spark.rdd.RDD[String]* (ou simplement *RDD[String]*). On sait donc qu'à partir de *flattenedRdd* on peut appliquer toutes les fonctions d'un *RDD*.
 
 Le type de *reducedRdd* est *RDD[(String, Int)]*. On sait donc qu'à partir de *reducedRdd* on peut appliquer toutes les fonctions d'un *RDD* ainsi que celles d'un *PairRDDFunctions*, comme vu précédemment, puisque c'est un RDD de (key, value) paires.
+
+### Mots les plus fréquents
 
 Ça serait intéressant de voir par exemple les 10 mots les plus fréquents :
 ```scala
@@ -339,3 +348,60 @@ On a fait les choses en deux fois ici pour montrer avant tout les différentes f
 The main method is the agg function, which has multiple variants. This class also contains some first-order statistics such as mean, sum for convenience.
 ```
 Vous retrouverez toutes les fonctions d'agrégation disponibles dans la partie *Aggregate functions* de la page de [doc de l'objet *functions*](https://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.sql.functions$).
+
+## Bonus : Persistance et partitions
+
+### Persistance
+
+Killez le spark-shell puis le relancer. Tapez
+```scala
+val rdd = sc.textFile("/Users/flo/Documents/packages/spark-2.3.4-bin-hadoop2.7/README.md").flatMap(line => line.split(" "))
+
+rdd.map(word => (word, 1)).reduceByKey((i, j) => i + j).collect.foreach(println)
+```
+
+Allez ensuite dans l'UI de spark, à l'adresse http://localhost:4040/jobs/. Vous devriez voir quelque chose comme ça :
+
+![Capture ecran spark jobs](images/capture_ecran_spark_jobs.png)
+
+Cliquez sur le lien `collect at ...` puis sur *DAG Visualization*. On obtient :
+
+![Capture ecran spark jobs](images/capture_ecran_dag_viz.png)
+
+Cette image nous montre toutes les transformations et actions qui ont été appliquées sur notre RDD pour aboutir au résultat final. On voit donc qu'on a lu un fichier via *textFile*, effectué un *flatMap*, puis un *map*, et enfin un *reduceByKey*.
+
+En cliquant sur `map at ...` on voit cette fois-ci la description du premier *Stage* (<=> toutes les transformations qui ont été faites avant que les données soient shufflées i.e. avant le *reduceByKey*). En particulier, dans le champs *Aggregated Metrics by Executor* on voit
+
+![Capture ecran spark jobs](images/capture_ecran_agg_metrics_read_rdd.png)
+
+Ça signifie qu'on a lu 103 lignes depuis le fichier *README.md* et que la fin du stage a écrit 324 lignes (cette dernière partie n'est pas vraiment importante ici).
+
+Si l'on relance la même commande et qu'on regarde les mêmes visualisations et métriques, on obtiendra à peu de chose près les mêmes résultats. Cela signifie **qu'à chaque fois** on lit le fichier texte *README* et on effectue la partie `.flatMap(line => line.split(" "))`. Ici c'est très rapide car le fichier est petit et sauvegardé sur notre machine. Mais s'il s'agissait d'un ou plusieurs fichiers de plusieurs giga stockés dans le cloud ? La lecture prendrait beaucoup plus de temps, tout comme le `flatMap`. S'il s'agissait d'un dataset d'entraînement pour un modèle de machine learning sur lequel on doit fait plusieurs passes pour optimiser les hyperparamètres ? Ça serait lent et long.
+
+Pour gérer ce problème, Spark donne la possibilité de *persister* le RDD/DataFrame (que ce soit en mémoire, sur disque, ou un mix des deux) i.e. de sauvegarder l'état actuel du RDD/DataFrame pour ne pas avoir à le recomputer à chaque fois :
+```scala
+rdd.persist
+rdd.count // force l'exécution et en particulier la persistance
+```
+
+Maintenant si l'on exécute de nouveau
+```scala
+rdd.map(word => (word, 1)).reduceByKey((i, j) => i + j).collect.foreach(println)
+```
+et qu'on regarde le *DAG Visualization* du nouveau Job, on obtient
+
+![Capture ecran spark jobs](images/capture_ecran_dag_viz_persisted_rdd.png)
+
+i.e. un point vert au niveau du *flatMap* a fait son apparition et signifie que ce RDD était/a été persisté. Pour être certain que le RDD était bien persisté et qu'on n'a pas de nouveau lu le fichier, on peut regarder les *Aggregated Metrics by Executor* :
+
+![Capture ecran spark jobs](images/capture_ecran_agg_metrics_persisted_rdd.png)
+
+On a lu cette fois-ci 566 lignes, ce qui correspond bien au nombre de lignes de notre *rdd*:
+```scala
+scala> rdd.count
+res8: Long = 566
+```
+
+### Nombre de partitions
+
+TODO
