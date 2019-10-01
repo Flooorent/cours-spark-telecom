@@ -15,9 +15,7 @@
         - [Digression : types des variables](#digression--types-des-variables)
         - [Mots les plus fréquents](#mots-les-plus-fréquents)
     - [Word count avec un DataFrame](#word-count-avec-un-dataframe)
-    - [Bonus : Persistance et partitions](#bonus--persistance-et-partitions)
-        - [Persistance](#persistance)
-        - [Nombre de partitions](#nombre-de-partitions)
+    - [Bonus : Persistance](#bonus--persistance)
 
 <!-- /TOC -->
 
@@ -349,9 +347,7 @@ The main method is the agg function, which has multiple variants. This class als
 ```
 Vous retrouverez toutes les fonctions d'agrégation disponibles dans la partie *Aggregate functions* de la page de [doc de l'objet *functions*](https://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.sql.functions$).
 
-## Bonus : Persistance et partitions
-
-### Persistance
+## Bonus : Persistance
 
 Killez le spark-shell puis le relancer. Tapez
 ```scala
@@ -407,7 +403,3 @@ Persister un RDD/DataFrame prend évidemment de la place en mémoire/disque. Qua
 scala> rdd.unpersist()
 ```
 L'espace mémoire/disque alloué au RDD/DataFrame est alors cleané et devient de nouveau disponible pour la suite des opérations.
-
-### Nombre de partitions
-
-TODO
