@@ -402,6 +402,12 @@ scala> rdd.count
 res8: Long = 566
 ```
 
+Persister un RDD/DataFrame prend évidemment de la place en mémoire/disque. Quand on n'en a plus besoin, il faut l'*unpersister* :
+```scala
+scala> rdd.unpersist()
+```
+L'espace mémoire/disque alloué au RDD/DataFrame est alors cleané et devient de nouveau disponible pour la suite des opérations.
+
 ### Nombre de partitions
 
 TODO
