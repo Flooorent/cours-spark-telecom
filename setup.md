@@ -217,14 +217,15 @@ IntelliJ 2016 nécessite *java 1.8* (qui n’est pas installé sur les machines 
 Donc télécharger la version 15 de IntelliJ Community pour linux ideaIC-15.0.6.tar.gz :
 https://www.jetbrains.com/idea/download/other.html.
 
-Décompresser IntelliJ.
+Décompresser IntelliJ via `tar -xvzf <idea>` (remplacer `<idea>` par le nom que vous voyez dans votre terminal).
 
 Dans un terminal :
 ```
-cd idea.../bin
+cd <idea>/bin
 chmod +x idea.sh
 ./idea.sh
 ```
+(encore une fois, remplacer `<idea>` par le bon nom).
 
 Dans la fenêtre qui s’ouvre:
 - I do not have previous installation => click OK
@@ -233,19 +234,20 @@ Dans la fenêtre qui s’ouvre:
 - tune Idea to your task : ne rien faire => click next
 - scala : cliquer sur “Install” => start using IntelliJ
 
-Une fois IntelliJ installé, aller dans les “préférences” puis dans “plugins”. Dans la barre de recherche de plugins, chercher “scala” et installer le plugins (s'il ne l’est pas déjà).
+Une fois IntelliJ installé, aller dans les "préférences" puis dans "plugins". Dans la barre de recherche de plugins, chercher "scala" et installer le plugins (s'il ne l’est pas déjà).
 
 #### Sur Ubuntu (machines perso : besoin des droits root)
 
 Download : https://www.jetbrains.com/idea/.
 
-Décompresser IntelliJ.
+Décompresser IntelliJ via `tar -xvzf <idea>` (remplacer `<idea>` par le nom que vous voyez dans votre terminal).
 
 Dans un terminal :
 ```
-cd idea-IC….etc…./bin
+cd <idea>/bin
 ./idea.sh
 ```
+(encore une fois, remplacer `<idea>` par le bon nom).
 
 Dans la fenêtre qui s’ouvre :
 - I do not have previous installation => click OK
