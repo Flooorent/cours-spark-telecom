@@ -144,7 +144,7 @@ Aller sur http://spark.apache.org/downloads.html puis :
 - Package type : pre-built for apache hadoop 2.7 and later
 - cliquer sur le lien : spark-2.3.4-bin-hadoop2.7.tgz
 
-Une fois téléchargé, copier le fichier *.tgz* dans votre répertoire *home* (dans un terminal entrez: `echo $HOME` pour savoir où est votre *home*). Puis décompresser le fichier *.tgz*.
+Une fois téléchargé, copier le fichier *.tgz* dans votre répertoire *home* (dans un terminal entrez: `echo $HOME` pour savoir où est votre *home*). Puis décompresser le fichier *.tgz* via un `tar -xvzf <spark>` (remplacer `<spark>` par le bon nom).
 
 #### Utiliser le Spark-shell
 
@@ -230,9 +230,9 @@ chmod +x idea.sh
 Dans la fenêtre qui s’ouvre:
 - I do not have previous installation => click OK
 - Choisir un thème => click next
-- create desktop entry : déselectionner “for all users” => click next
+- create desktop entry : déselectionner "for all users" => click next
 - tune Idea to your task : ne rien faire => click next
-- scala : cliquer sur “Install” => start using IntelliJ
+- scala : cliquer sur "Install" => start using IntelliJ
 
 Une fois IntelliJ installé, aller dans les "préférences" puis dans "plugins". Dans la barre de recherche de plugins, chercher "scala" et installer le plugins (s'il ne l’est pas déjà).
 
@@ -255,9 +255,9 @@ Dans la fenêtre qui s’ouvre :
 - create desktop entry => click next
 - launcher script : ne rien faire => click next
 - tune Idea to your task : ne rien faire => click next
-- scala : cliquer sur “Install” => start using IntelliJ
+- scala : cliquer sur "Install" => start using IntelliJ
 
-Une fois IntelliJ installé, aller dans les “préférences” puis dans “plugins”. Dans la barre de recherche de plugins, chercher “scala” et installer le plugins (s'il ne l’est pas déjà).
+Une fois IntelliJ installé, aller dans les "préférences" puis dans "plugins". Dans la barre de recherche de plugins, chercher "scala" et installer le plugins (s'il ne l’est pas déjà).
 
 #### Sur Mac
 
@@ -279,17 +279,21 @@ Lancer IntelliJ, dans la fenêtre qui s’ouvre faire:
 - create desktop entry => click next
 - laucher script : ne rien faire => click next
 - tune Idea to your task : ne rien faire => click next
-- scala : cliquer sur “Install” => start using IntelliJ
+- scala : cliquer sur "Install" => start using IntelliJ
 
-Une fois IntelliJ installé, aller dans les “préférences” puis dans “plugins”. Dans la barre de recherche de plugins, chercher “scala” et installer le plugins (s'il ne l’est pas déjà)
+Une fois IntelliJ installé, aller dans les "préférences" puis dans "plugins". Dans la barre de recherche de plugins, chercher "scala" et installer le plugins (s'il ne l’est pas déjà)
 
 ### Importer le projet (voir TP 2 pour télécharger le template de projet) dans IntelliJ
+
+Pour importer le projet, suivre cette partie ou celle dans le TP 2.
+
+Téléchargez le template du projet Spark [*spark_project_kickstarter_2019_2020*](https://github.com/Flooorent/spark_project_kickstarter_2019_2020).
 
 Ouvrir IntelliJ puis :
 - Import project
 - Import project from external model, et choisir SBT
-- sélectionner tp_spark/tp_spark
-- sélectionner “use auto import” / project SDK cliquer sur “new” puis “JDK” sélectionner “java-8-oracle” dans l’arborescence / cliquer sur Finish.
+- Sélectionner le chemin vers le projet décompressé
+- Sélectionner "use auto import" / project SDK cliquer sur "new" puis "JDK" sélectionner "java-8-oracle" dans l’arborescence / cliquer sur Finish.
 - sbt data project to import, ne rien faire, cliquer sur OK
 - Attendre
 
@@ -299,18 +303,20 @@ Ouvrir IntelliJ puis :
 
 Dans un terminal :
 ```
-cd tp_spark/tp_spark # aller là où se trouve le fichier build.sbt du projet
+cd <chemin/du/projet> # aller là où se trouve le fichier build.sbt du projet
 sbt assembly
 ```
 
-L’adresse du jar est donnée vers la fin du script : 
-[info] Packaging /home/max/tp_spark/tp_spark/target/scala-2.11/tp_spark-assembly-1.0.jar
+L’adresse du jar est donnée vers la fin du script :
+```
+[info] Packaging /Users/flo/Documents/github/spark_project_kickstarter_2019_2020/target/scala-2.11/spark_project_kickstarter_2019_2020-assembly-1.0.jar
+```
 
 ### Démarrer un cluster Spark local (le driver et le worker seront sur la même machine)
 
 Dans un terminal :
 ```
-cd spark-2.3.4-bin-hadoop2.7/sbin # attention c’est bien “sbin”
+cd spark-2.3.4-bin-hadoop2.7/sbin # attention c’est bien "sbin"
 ./start-all.sh
 ```
 
@@ -334,27 +340,28 @@ Soumettre le jar du script qui a été compilé:
 
 Dans un terminal :
 ```
-cd spark-2.3.4-bin-hadoop2.7/bin # !!!! Attention c’est bien “bin” maintenant
+cd spark-2.3.4-bin-hadoop2.7/bin # !!!! Attention c’est bien "bin" maintenant
 
 ./spark-submit \
 --driver-memory 3G \
 --executor-memory 4G \
---class com.sparkProject.Job \
+--class paristech.Job \
 --master spark://$(hostname -i):7077 \
-/Users/maxime/IdeaProjects/tp_spark/target/scala-2.10/tp_spark-assembly-1.0.jar
+/Users/flo/Documents/github/spark_project_kickstarter_2019_2020/target/scala-2.11/spark_project_kickstarter_2019_2020-assembly-1.0.jar
 ```
 
-NB : remplacer le chemin vers le jar, remplacer le nom de la classe si il a été modifié par rapport au template donné en début de TP.
+NB : remplacer le chemin vers le jar, remplacer le nom de la classe s'il a été modifié par rapport au template donné en début de TP.
 
+Un exemple de commande pour, en plus, sauvegarder les event logs et pouvoir lire et écrire depuis/sur AWS :
 ```
 ./spark-submit \
 --conf spark.eventLog.enabled=true \
 --conf spark.eventLog.dir="/tmp" \
 --driver-memory 3G \
 --executor-memory 4G \
---class com.sparkProject.Job \
+--class paristech.Job \
 --num-executors 2 \
 --packages "com.amazonaws:aws-java-sdk:1.7.4,org.apache.hadoop:hadoop-aws:2.7.1" \
 --master spark://$(hostname -i):7077 \
-/Users/maxime/IdeaProjects/tp_spark/target/scala-2.10/tp_spark-assembly-1.0.jar
+/Users/flo/Documents/github/spark_project_kickstarter_2019_2020/target/scala-2.11/spark_project_kickstarter_2019_2020-assembly-1.0.jar
 ```

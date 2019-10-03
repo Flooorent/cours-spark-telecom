@@ -40,11 +40,11 @@ Suivre la section [Setup TP 2](setup.md#setup-tp-2-installation-de-sbt-intellij-
 
 Téléchargez le template du projet Spark [*spark_project_kickstarter_2019_2020*](https://github.com/Flooorent/spark_project_kickstarter_2019_2020) puis importez-le dans IntelliJ :
 - Ouvrez IntelliJ, dans la page d'accueil cliquez sur "import project". 
-- Sélectionnez le chemin vers le projet décompressé.
-- Sélectionnez "import project from external model", et sélectionner SBT 
+- Sélectionner le chemin vers le projet décompressé.
+- Sélectionner "import project from external model", et sélectionner SBT
 - Click next
 - Si "project sdk" est vide cliquez sur new, intelliJ devrait directement ouvrir l’arborescence vers votre installation de java.
-- Sélectionnez "use auto import" (Si cette option n’est pas disponible, puisqu’elle a été retirée de la dernière version d’IntelliJ, continuez sans rien cocher)
+- Sélectionner "use auto import" (Si cette option n’est pas disponible, puisqu’elle a été retirée de la dernière version d’IntelliJ, continuer sans rien cocher)
 - Click finish
 - SBT project data to import : vérifiez que les deux dossiers sont bien sélectionnés
 - Click OK
