@@ -26,7 +26,7 @@ Objectif: Réaliser un modèle capable de prédire si une campagne Kickstarter v
 Données: Les données sont disponibles sur [kaggle](https://www.kaggle.com/codename007/funding-successful-projects).
 
 Commencez par lire la description des données et la description de chaque colonne en cliquant sur *train.csv* dans la partie *Data Sources*.
-Téléchargez le dataset pré-cleané *train_clean.csv* présent dans le dossier *data* (pour jouer en mode "ultra nightmare" utilisez plutôt le fichier *train.csv*).
+Téléchargez le dataset pré-cleané *train_clean.csv* présent dans le dossier [*data*](data) (pour jouer en mode "ultra nightmare" utilisez plutôt le fichier *train.csv*).
 
 Nous allons utiliser l’IDE IntelliJ qui permet de développer des projets (en particulier de data science) en Spark/scala de façon plus efficace qu’avec le spark-shell. Le shell reste toutefois utile pour tester des lignes de codes ou pour interagir rapidement avec les données.  
 
