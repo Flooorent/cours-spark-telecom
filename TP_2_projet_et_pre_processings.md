@@ -71,8 +71,6 @@ cd  /chemin/vers/projet/spark  # sauf si vous êtes déjà dans le répertoire o
 ```
 La dernière commande compile le code, construit le jar, puis exécute le job *Preprocessor* sur une instance Spark temporaire sur votre machine (créée juste pour l’exécution du script). Les outputs de votre script (les *println*, *df.show()*, etc.) sont affichés dans le terminal.
 
-Si vous le souhaitez vous pouvez ouvrir un terminal dans IntelliJ (icône en bas à gauche) pour éviter d’avoir trop de fenêtres ouvertes en même temps. Vous pouvez également créer des onglets dans le terminal (icône +): un onglet pour la commande sbt assembly, et un terminal pour le spark-submit.
-
 ## Début du TP
 
 Allez dans l’arborescence du projet : *src/main/scala/paristech*. Vous devez voir deux objets: *Preprocessor* et *Trainer*. Nous allons coder dans *Preprocessor*, la partie *Trainer* servira pour le TP 3. Le but du TP 2 est de préparer le dataset, c’est-à-dire essentiellement nettoyer les données, créer de nouveaux features et traiter les valeurs manquantes.
@@ -109,7 +107,7 @@ Affichez un extrait du DataFrame sous forme de tableau :
 df.show()
 ```
  
-Affichez le schéma du DataFrame, à savoir le nom de chaque colonne avec son type) :
+Affichez le schéma du DataFrame, à savoir le nom de chaque colonne avec son type :
 ```scala
 df.printSchema()
 ```
@@ -162,7 +160,7 @@ val df2: DataFrame = dfCasted.drop("disable_communication")
 Dans les datasets construits a posteriori des évènements, il arrive que des données ne pouvant être connues qu'après la résolution de chaque évènement soient insérées dans le dataset. On a des fuites depuis le futur ! Par exemple, on a ici le nombre de "backers" dans la colonne *backers_count*. Il s'agit du nombre total de personnes ayant investi dans chaque projet, or ce nombre n'est connu qu'après la fin de la campagne.
 
 Il faut savoir repérer et traiter ces données pour plusieurs raisons :
-- pendant l'entraînement (si on ne les a pas enlevées) elles facilitent le travail du modèle puisque qu'elles contiennent des informations directement liées à ce qu'on veut prédire. Par exemple, si `backers_count = 0` on est sûr que la campagne a raté.
+- pendant l'entraînement (si on ne les a pas enlevées) elles facilitent le travail du modèle puisqu'elles contiennent des informations directement liées à ce qu'on veut prédire. Par exemple, si `backers_count = 0` on est sûr que la campagne a raté.
 - au moment d'appliquer notre modèle, les données du futur ne sont pas présentes (puisqu'elles ne sont pas encore connues). On ne peut donc pas les utiliser comme input pour un modèle.
 
 Ici, pour enlever les données du futur on retire les colonnes *backers_count* et *state_changed_at* :
