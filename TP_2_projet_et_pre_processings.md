@@ -66,7 +66,7 @@ chmod +x build_and_submit.sh
 
 Il vous suffit ensuite pour lancer votre job spark d’ouvrir un terminal et de faire:
 ```bash
-cd  /chemin/vers/projet/spark  # sauf si vous êtes déjà dans le répertoire où se trouve le script
+cd /chemin/vers/projet/spark  # sauf si vous êtes déjà dans le répertoire où se trouve le script
 ./build_and_submit.sh Preprocessor  
 ```
 La dernière commande compile le code, construit le jar, puis exécute le job *Preprocessor* sur une instance Spark temporaire sur votre machine (créée juste pour l’exécution du script). Les outputs de votre script (les *println*, *df.show()*, etc.) sont affichés dans le terminal.
