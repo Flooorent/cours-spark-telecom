@@ -49,13 +49,12 @@ Charger le DataFrame obtenu à la fin du TP 2.
  
 ## Utilisation des données textuelles
 
-Les textes ne sont pas utilisables tels quels par les algorithmes parce qu’ils ont besoin de données numériques, en particulier pour les calculs d’erreurs et d’optimisation. On veut donc convertir la colonne "text" en données numériques. Une façon très répandue de faire cela est d’appliquer l’algorithme [TF-IDF](https://fr.wikipedia.org/wiki/TF-IDF).
+Les textes ne sont pas utilisables tels quels par les algorithmes parce qu’ils ont besoin de données numériques, en particulier pour les calculs d’erreurs et d’optimisation. On veut donc convertir la colonne "text" en données numériques. Une façon très répandue de faire cela est d’appliquer l’algorithme [TF-IDF](https://spark.apache.org/docs/latest/ml-features.html#tf-idf).
 
 ### Stage 1 : récupérer les mots des textes
 
 La première étape est de séparer les textes en mots (ou tokens) avec un tokenizer. Construire le premier stage du pipeline de la façon suivante :
 ```scala
-// TODO: dire ce que fait chaque ligne
 val tokenizer = new RegexTokenizer()
   .setPattern("\\W+")
   .setGaps(true)
@@ -69,11 +68,11 @@ On veut retirer les [*stop words*](https://en.wikipedia.org/wiki/Stop_words) pou
 
 ### Stage 3 : computer la partie TF
 
-La partie TF de TF-IDF est faite avec la classe *CountVectorizer*.
+La partie TF de TF-IDF est faite avec la classe *CountVectorizer*. Lire la [doc](https://spark.apache.org/docs/latest/ml-features.html#tf-idf) pour plus d'info sur TF-IDF et son implémentation.
 
 ### Stage 4 : computer la partie IDF
 
-Trouver la partie IDF. On veut écrire l’output de cette étape dans une colonne *tfidf*. La page [Feature extraction](http://scikit-learn.org/stable/modules/feature_extraction.html) de scikit-learn a un paragraphe sur TF-IDF.
+Implémenter la partie IDF avec en output une colonne *tfidf*.
 
 ## Conversion des variables catégorielles en variables numériques
 
@@ -89,7 +88,7 @@ On veut les résultats dans une colonne *currency_indexed*.
 
 ### Stages 7 et 8: One-Hot encoder ces deux catégories
 
-Transformer ces deux catégories avec un "one-hot encoder" en créant les colonnes *currency_onehot* et *country_onehot*. Une [page Quora](https://www.quora.com/What-is-one-hot-encoding-and-when-is-it-used-in-data-science) sur le one-hot encoding.
+Transformer ces deux catégories avec un "one-hot encoder" en créant les colonnes *country_onehot* et *currency_onehot*. Une [page Quora](https://www.quora.com/What-is-one-hot-encoding-and-when-is-it-used-in-data-science) sur le one-hot encoding.
 
 ## Mettre les données sous une forme utilisable par Spark.ML
 
