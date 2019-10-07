@@ -130,7 +130,7 @@ val lr = new LogisticRegression()
   .setRawPredictionCol("raw_predictions")
   .setThresholds(Array(0.7, 0.3))
   .setTol(1.0e-6)
-  .setMaxIter(50)
+  .setMaxIter(20)
 ```
 
 ## Création du Pipeline
