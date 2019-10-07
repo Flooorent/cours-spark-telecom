@@ -22,7 +22,8 @@
         - [Split des données en training et test sets](#split-des-données-en-training-et-test-sets)
         - [Entraînement du modèle](#entraînement-du-modèle)
         - [Test du modèle](#test-du-modèle)
-    - [Réglage des hyper-paramètresing (a.k.a. tuning) du modèle](#réglage-des-hyper-paramètresing-aka-tuning-du-modèle)
+    - [Réglage des hyper-paramètres (a.k.a. tuning) du modèle](#réglage-des-hyper-paramètres-aka-tuning-du-modèle)
+        - [Grid search](#grid-search)
         - [Test du modèle](#test-du-modèle-1)
     - [Supplément](#supplément)
 
@@ -150,52 +151,50 @@ Entraîner le modèle via le pipeline puis le sauvegarder.
 
 ### Test du modèle
 
-Appliquer le modèle aux données de test. Mettre les résultats dans le DataFrame `df_WithPredictions`.
+Appliquer le modèle aux données de test. Mettre les résultats dans le DataFrame `dfWithSimplePredictions`.
 
 Afficher
 ```scala
-df_WithPredictions.groupBy("final_status", "predictions").count.show()
+dfWithSimplePredictions.groupBy("final_status", "predictions").count.show()
 ```
 
 Afficher le [*f1-score*](https://en.wikipedia.org/wiki/F1_score) du modèle sur les données de test (cette métrique s'obtient via [MulticlassClassificationEvaluator](https://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator)).
 
-## Réglage des hyper-paramètresing (a.k.a. tuning) du modèle
+## Réglage des hyper-paramètres (a.k.a. tuning) du modèle
 
 La façon de procéder présentée plus haut permet rapidement d'entraîner un modèle et d'avoir une mesure de sa performance. Mais que se passe-t-il si l'ont souhaite utiliser 300 itérations au maximum plutôt que 50 (i.e. la ligne `.setMaxIter(50)`) ? Si l'on souhaite modifier le paramètre de régularisation du modèle ? Si l'on souhaite modifier le paramètre *minDF* de la classe *CountVectorizer* (qui permet de ne prendre que les mots apparaissant dans au moins minDF documents) ? Il faudrait à chaque fois modifier le(s) paramètre(s) à la main, ré-entraîner le modèle, re-calculer la performance du modèle obtenu sur l'ensemble de test, puis finalement choisir le meilleur modèle (i.e. celui avec la meilleure performance sur les données de test) parmi tous ces modèles entraînés. C'est ce qu'on appelle le réglage des hyper-paramètres ou encore tuning du modèle. Et c'est fastidieux.
 
-La plupart des algorithmes de machine learning possèdent des hyper-paramètres, par exemple le nombre de couches et de neurones dans un réseau de neurones, le nombre d’arbres et leur profondeur maximale dans les random forests, etc. Qui plus est, comme mentionné précédemment avec le paramètre *minDF$ de la classe *CountVectorizer*, on peut également se retrouver avec des hyper-paramètres au niveau des stages de préprocessing. Nous devons trouver la meilleur combinaison possible de tous ces hyper-paramètres.
+La plupart des algorithmes de machine learning possèdent des hyper-paramètres, par exemple le nombre de couches et de neurones dans un réseau de neurones, le nombre d’arbres et leur profondeur maximale dans les random forests, etc. Qui plus est, comme mentionné précédemment avec le paramètre *minDF* de la classe *CountVectorizer*, on peut également se retrouver avec des hyper-paramètres au niveau des stages de préprocessing. L'objectif est donc de trouver la meilleure combinaison possible de tous ces hyper-paramètres.
 
-TODO: update suite
+### Grid search
 
 Une des techniques pour régler automatiquement les hyper-paramètres est la *grid search* qui consiste à :
 - créer une grille de valeurs à tester pour les hyper-paramètres
-- en chaque point de la grille, séparer le training set en un ensemble de training (70%) et un ensemble de validation (30%), entraîner un modèle sur le training set, puis calculer l’erreur du modèle sur le validation set
+- en chaque point de la grille
+    - séparer le training set en un ensemble de training (70%) et un ensemble de validation (30%)
+    - entraîner un modèle sur le training set
+    - calculer l’erreur du modèle sur le validation set
 - sélectionner le point de la grille (<=> garder les valeurs d’hyper-paramètres de ce point) où l’erreur de validation est la plus faible i.e. là où le modèle a le mieux appris
 
 Pour la régularisation de notre régression logistique on veut tester les valeurs de 10e-8 à 10e-2 par pas de 2.0 en échelle logarithmique (on veut tester les valeurs 10e-8, 10e-6, 10e-4 et 10e-2).
 Pour le paramètre minDF de CountVectorizer on veut tester les valeurs de 55 à 95 par pas de 20. 
 En chaque point de la grille on veut utiliser 70% des données pour l’entraînement et 30% pour la validation.
-On veut utiliser le [*f1-score*](https://en.wikipedia.org/wiki/F1_score) pour comparer les différents modèles en chaque point de la grille. Chercher cette métrique dans *ml.evaluation*.
+On veut utiliser le *f1-score* pour comparer les différents modèles en chaque point de la grille.
 
 Préparer la grid-search pour satisfaire les conditions explicitées ci-dessus puis lancer la grid-search sur le dataset "training" préparé précédemment.
 
 ### Test du modèle
 
-Pour évaluer de façon non biaisée la pertinence du modèle obtenu, il faut le tester sur des données :
-- que le modèle n’a jamais vu pendant son entraînement
-- et qui n’ont pas servi pour sélectionner le meilleur modèle de la grid search.
+On a vu que pour évaluer de façon non biaisée la pertinence du modèle obtenu, il fallait le tester sur des données qu'il n'avait jamais vues pendant son entraînement. Ça vaut également pour les données utilisées pour sélectionner le meilleur modèle de la grid search (training et validation)! C’est pour cela que nous avons construit le dataset de test que nous avons laissé de côté jusque là.
 
-C’est pour cela que nous avons construit le dataset de test que nous avons laissé de côté jusque là. 
-
-Appliquer le meilleur modèle trouvé avec la grid-search aux données de test. Mettre les résultats dans le DataFrame `df_WithPredictions`. Afficher le f1-score du modèle sur les données de test.
+Appliquer le meilleur modèle trouvé avec la grid-search aux données de test. Mettre les résultats dans le DataFrame `dfWithPredictions`. Afficher le f1-score du modèle sur les données de test.
 
 Afficher
 ```scala
-df_WithPredictions.groupBy("final_status", "predictions").count.show()
+dfWithPredictions.groupBy("final_status", "predictions").count.show()
 ```
 
 Sauvegarder le modèle entraîné pour pouvoir le réutiliser plus tard.
-
 
 ## Supplément
 
