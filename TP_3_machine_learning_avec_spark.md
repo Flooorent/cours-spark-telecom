@@ -17,11 +17,13 @@
     - [Mettre les données sous une forme utilisable par Spark.ML](#mettre-les-données-sous-une-forme-utilisable-par-sparkml)
         - [Stage 9 : assembler tous les features en un unique vecteur](#stage-9--assembler-tous-les-features-en-un-unique-vecteur)
         - [Stage 10 : créer/instancier le modèle de classification](#stage-10--créerinstancier-le-modèle-de-classification)
-        - [Créer le Pipeline](#créer-le-pipeline)
-    - [Entraînement et tuning du modèle](#entraînement-et-tuning-du-modèle)
+    - [Création du Pipeline](#création-du-pipeline)
+    - [Entraînement, test, et sauvegarde du modèle](#entraînement-test-et-sauvegarde-du-modèle)
         - [Split des données en training et test sets](#split-des-données-en-training-et-test-sets)
-        - [Entraînement du classifieur et réglage des hyper-paramètres](#entraînement-du-classifieur-et-réglage-des-hyper-paramètres)
+        - [Entraînement du modèle](#entraînement-du-modèle)
         - [Test du modèle](#test-du-modèle)
+    - [Réglage des hyper-paramètresing (a.k.a. tuning) du modèle](#réglage-des-hyper-paramètresing-aka-tuning-du-modèle)
+        - [Test du modèle](#test-du-modèle-1)
     - [Supplément](#supplément)
 
 <!-- /TOC -->
@@ -112,7 +114,10 @@ Assembler les features *tfidf*, *days_campaign*, *hours_prepa*, *goal*, *country
 
 ### Stage 10 : créer/instancier le modèle de classification
 
-Il s’agit d’une régression logistique qu'on définit de la façon suivante :
+Le classifieur que nous utilisons est une [régression logistique]( 
+http://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.ml.classification.LogisticRegression) avec une régularisation dans la fonction de coût qui permet de pénaliser les features les moins fiables pour la classification.
+
+On la définit de la façon suivante :
 ```scala
 val lr = new LogisticRegression()
   .setElasticNetParam(0.0)
@@ -124,28 +129,44 @@ val lr = new LogisticRegression()
   .setRawPredictionCol("raw_predictions")
   .setThresholds(Array(0.7, 0.3))
   .setTol(1.0e-6)
-  .setMaxIter(300)
+  .setMaxIter(50)
 ```
 
-### Créer le Pipeline
+## Création du Pipeline
 
-Enfin, créer le pipeline en assemblant les 10 stages définis précédemment, dans le bon ordre.
+Enfin, créer le [pipeline](https://spark.apache.org/docs/latest/ml-pipeline.html#ml-pipelines) en assemblant les 10 stages définis précédemment, dans le bon ordre.
 
-## Entraînement et tuning du modèle
+## Entraînement, test, et sauvegarde du modèle
 
 ### Split des données en training et test sets
 
-On veut séparer les données aléatoirement en un training set (90% des données) qui servira à l’entraînement du modèle et un test set (10% des données) qui servira à tester la qualité du modèle sur des données que le modèle n’a jamais vues lors de son entraînement.
+On veut séparer les données aléatoirement en un training set (90% des données) qui servira à l’entraînement du modèle et un test set (10% des données) qui servira à tester la qualité du modèle sur des données que le modèle n’a jamais vues lors de son entraînement. Cette phase est nécessaire pour avoir des résultats non-biaisés sur la pertinence du modèle obtenu.
 
 Créer un DataFrame nommé *training* et un autre nommé *test* à partir du DataFrame chargé initialement de façon à le séparer en training et test sets dans les proportions 90%, 10% respectivement.
 
-### Entraînement du classifieur et réglage des hyper-paramètres
+### Entraînement du modèle
 
-Le classifieur que nous utilisons est une [régression logistique]( 
-http://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.ml.classification.LogisticRegression) avec une régularisation dans la fonction de coût qui permet de pénaliser les features les moins fiables pour la classification.
+Entraîner le modèle via le pipeline puis le sauvegarder.
 
-L’importance de la régularisation est contrôlée par un hyper-paramètre du modèle qu’il faut régler à la main. La plupart des algorithmes de machine learning possèdent des hyper-paramètres, par exemple le nombre de couches et de neurones dans un réseau de neurones, le nombre d’arbres et leur profondeur maximale dans les random forests, etc.
-Par ailleurs la classe *CountVectorizer* dans le 3ème stage a un paramètre *minDF* qui permet de ne prendre que les mots apparaissant dans au moins minDF documents. C’est aussi un hyperparamètre du modèle que nous voulons régler.
+### Test du modèle
+
+Appliquer le modèle aux données de test. Mettre les résultats dans le DataFrame `df_WithPredictions`.
+
+Afficher
+```scala
+df_WithPredictions.groupBy("final_status", "predictions").count.show()
+```
+
+Afficher le [*f1-score*](https://en.wikipedia.org/wiki/F1_score) du modèle sur les données de test (cette métrique s'obtient via [MulticlassClassificationEvaluator](https://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator)).
+
+## Réglage des hyper-paramètresing (a.k.a. tuning) du modèle
+
+La façon de procéder présentée plus haut permet rapidement d'entraîner un modèle et d'avoir une mesure de sa performance. Mais que se passe-t-il si l'ont souhaite utiliser 300 itérations au maximum plutôt que 50 (i.e. la ligne `.setMaxIter(50)`) ? Si l'on souhaite modifier le paramètre de régularisation du modèle ? Si l'on souhaite modifier le paramètre *minDF* de la classe *CountVectorizer* (qui permet de ne prendre que les mots apparaissant dans au moins minDF documents) ? Il faudrait à chaque fois modifier le(s) paramètre(s) à la main, ré-entraîner le modèle, re-calculer la performance du modèle obtenu sur l'ensemble de test, puis finalement choisir le meilleur modèle (i.e. celui avec la meilleure performance sur les données de test) parmi tous ces modèles entraînés. C'est ce qu'on appelle le réglage des hyper-paramètres ou encore tuning du modèle. Et c'est fastidieux.
+
+La plupart des algorithmes de machine learning possèdent des hyper-paramètres, par exemple le nombre de couches et de neurones dans un réseau de neurones, le nombre d’arbres et leur profondeur maximale dans les random forests, etc. Qui plus est, comme mentionné précédemment avec le paramètre *minDF$ de la classe *CountVectorizer*, on peut également se retrouver avec des hyper-paramètres au niveau des stages de préprocessing. Nous devons trouver la meilleur combinaison possible de tous ces hyper-paramètres.
+
+TODO: update suite
+
 Une des techniques pour régler automatiquement les hyper-paramètres est la *grid search* qui consiste à :
 - créer une grille de valeurs à tester pour les hyper-paramètres
 - en chaque point de la grille, séparer le training set en un ensemble de training (70%) et un ensemble de validation (30%), entraîner un modèle sur le training set, puis calculer l’erreur du modèle sur le validation set
