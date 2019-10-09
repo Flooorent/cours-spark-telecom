@@ -69,6 +69,20 @@ sudo apt-get update
 sudo apt-get install oracle-java8-installer
 ```
 
+NB : si vous n'arrivez pas à installer java 8 de cette façon, testez
+```
+sudo apt update
+sudo apt install openjdk-8-jdk openjdk-8-jre
+```
+
+Si vous avez installé java de la seconde façon, il faut ajouter les lignes suivantes dans le fichier *.bash_profile* situé dans notre *home* :
+```
+export JAVA_HOME= /usr/lib/jvm/java-8-openjdk-amd64
+export JRE_HOME=/usr/lib/jvm/java-8-openjdk-amd64/jre
+```
+
+Dans le cas contraire, setter uniquement la java home en suivant les explications plus bas.
+
 Option 2 : Installation manuelle
 
 Allez sur http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html. Dans *Java SE Development Kit 8u181* choisissez la version à dowloader qui vous correspond. Puis installer le paquet downloadé.
