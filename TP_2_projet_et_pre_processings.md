@@ -6,6 +6,7 @@
     - [Introduction](#introduction)
     - [Setup](#setup)
         - [Installation de IntelliJ](#installation-de-intellij)
+        - [Téléchargement du projet](#téléchargement-du-projet)
         - [Charger le template du projet dans IntelliJ](#charger-le-template-du-projet-dans-intellij)
         - [Soumettre un script à Spark](#soumettre-un-script-à-spark)
     - [Début du TP](#début-du-tp)
@@ -36,9 +37,23 @@ Nous allons utiliser l’IDE IntelliJ qui permet de développer des projets (en 
 
 Suivre la section [Setup TP 2](setup.md#setup-tp-2-installation-de-sbt-intellij-et-démarrage-du-projet) dans le fichier `setup.md`.
 
+### Téléchargement du projet
+
+Pour télécharger le template du projet Spark [*spark_project_kickstarter_2019_2020*](https://github.com/Flooorent/spark_project_kickstarter_2019_2020) :
+
+Option 1 (recommandée) : Fork et clone sur GitHub
+
+Si vous avez déjà un compte GitHub, le mieux est de *forker* le projet (en faire une copie pour l'avoir comme propre projet) en cliquant sur l'icône *Fork* en haut à droite de la page. Une fois cette étape effectuée, vous pouvez *cloner* le projet (le vôtre, celui que vous venez de forker et qui se trouve sur votre propre page GitHub) en local. De cette façon, vous pourrez faire des modifications, les sauvegarder, et les pusher sur GitHub.
+
+Si vous n'avez pas de compte GitHub, je vous invite à en créer un.
+
+Option 2 : télécharger le fichier zip
+
+Si vous ne souhaitez pas créer de compte GitHub, vous pouvez simplement télécharger le fichier zip en cliquant sur l'icône *Clone or download* puis sur *Download ZIP*.
+
 ### Charger le template du projet dans IntelliJ
 
-Téléchargez le template du projet Spark [*spark_project_kickstarter_2019_2020*](https://github.com/Flooorent/spark_project_kickstarter_2019_2020) puis importez-le dans IntelliJ :
+Importez-le ensuite dans IntelliJ :
 - Ouvrez IntelliJ, dans la page d'accueil cliquez sur "import project". 
 - Sélectionner le chemin vers le projet décompressé.
 - Sélectionner "import project from external model", et sélectionner SBT

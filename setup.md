@@ -34,6 +34,8 @@
 
 Spark utilise des machines virtuelles java, il faut donc commencer par l'installer.
 
+NB : **Il faut installer java 1.8, les versions suivantes ne fonctionneront pas**.
+
 ### Installation de java
 
 Selon votre machine (mac, Linux, machine de TP) reportez-vous à la section correspondante dans la suite.
@@ -304,9 +306,7 @@ Une fois IntelliJ installé, aller dans les "préférences" puis dans "plugins".
 
 ### Importer le projet (voir TP 2 pour télécharger le template de projet) dans IntelliJ
 
-Pour importer le projet, suivre cette partie ou celle dans le TP 2.
-
-Téléchargez le template du projet Spark [*spark_project_kickstarter_2019_2020*](https://github.com/Flooorent/spark_project_kickstarter_2019_2020).
+Pour importer le projet, suivre la partie [Téléchargement du projet](TP_2_projet_et_pre_processings.md#téléchargement-du-projet) dans le TP 2.
 
 Ouvrir IntelliJ puis :
 - Import project
