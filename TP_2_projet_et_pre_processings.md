@@ -69,7 +69,11 @@ Importez-le ensuite dans IntelliJ :
 
 Pour exécuter un script Spark/scala, il faut le compiler et en faire un "jar" i.e. un fichier exécutable sur la machine virtuelle java. La compilation d’un script en scala peut se faire avec SBT (équivalent de maven pour java). L'exécutable doit ensuite être lancé sur le cluster Spark via la commande spark-submit. 
 
-Pour simplifier les choses un script bash *build_and_submit.sh* est fourni dans le template de projet Spark. Pour que ce script fonctionne, vous devez avoir le dossier spark-2.3.4-bin-hadoop2.7 dans votre répertoire HOME. 
+Pour simplifier les choses un script bash *build_and_submit.sh* est fourni dans le template de projet Spark. Pour que ce script fonctionne, vous devez avoir le dossier spark-2.3.4-bin-hadoop2.7 dans votre répertoire HOME. Si ce n'est pas le cas, il faut modifier la ligne
+```
+path_to_spark="$HOME/spark-2.3.4-bin-hadoop2.7"
+```
+dans le fichier *build_and_submit.sh* et remplacer ce path par le path où se situe votre dossier spark. Si vous avez par exemple une version de Spark différente de la *2.3.4*, il faut la modifier.
 
 (Pour voir plus en détail la procédure complète pour soumettre un Job à un cluster Spark, reportez-vous à la section [HOW TO: lancer un job Spark](setup.md#how-to-lancer-un-job-spark) du fichier `setup.md`)
 
