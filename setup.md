@@ -3,12 +3,13 @@
 <!-- TOC -->
 
 - [Setup TPs Spark MS BGD (2018-2019)](#setup-tps-spark-ms-bgd-2018-2019)
-    - [Setup TP 1: (Mac et Linux) Installation de Spark](#setup-tp-1-mac-et-linux-installation-de-spark)
+    - [Setup TP 1: Installation de Spark](#setup-tp-1-installation-de-spark)
         - [Installation de java](#installation-de-java)
             - [Sur les machines de TP](#sur-les-machines-de-tp)
             - [Linux (Ubuntu)](#linux-ubuntu)
             - [Linux (CentOS)](#linux-centos)
             - [Mac](#mac)
+            - [Windows](#windows)
         - [Installation de Spark](#installation-de-spark)
             - [Utiliser le Spark-shell](#utiliser-le-spark-shell)
             - [Réduire la quantité des logs affichés par Spark](#réduire-la-quantité-des-logs-affichés-par-spark)
@@ -29,7 +30,7 @@
 
 <!-- /TOC -->
 
-## Setup TP 1: (Mac et Linux) Installation de Spark
+## Setup TP 1: Installation de Spark
 
 Spark utilise des machines virtuelles java, il faut donc commencer par l'installer.
 
@@ -139,6 +140,10 @@ export JAVA_HOME=`/usr/libexec/java_home -v 1.8`
 ```
 
 Puis fermer et réouvrir le terminal pour que la modification soit effective.
+
+#### Windows
+
+Pour installer java 1.8 et Spark, suivre [cet article](https://medium.com/big-data-engineering/how-to-install-apache-spark-2-x-in-your-pc-e2047246ffc3).
 
 ### Installation de Spark
 
