@@ -56,9 +56,12 @@ Pour afficher toutes les commandes magiques du shell, tapez dans celui-ci :
 ```scala
 scala> :help
 ```
-(*scala>* fait référence au prompteur que l'on voit dans le spark-shell, pas besoin de réécrire ça donc, juste ce qui suit, ici `:help`).
 
-Une commande particulièrement intéressante est `:paste` qui permet de copier-coller du code qui fait potentiellement plusieurs lignes et de tout exécuter correctement en appuyant ensuite sur *ctrl-D*.
+Une commande particulièrement intéressante est `:paste` qui permet d'entrer en mode copier-coller : on peut ensuite copier-coller du code qui fait potentiellement plusieurs lignes et tout exécuter en appuyant ensuite sur *ctrl-D*.
+
+NB : quand on copie-colle dans ce mode du code qui fait plusieurs lignes, on ne peut pas modifier le code des lignes précédentes. Le mieux dans ce cas est d'écrire le code dans un éditeur de texte puis de le copier-coller pour pouvoir le modifier facilement.
+
+NB 2 : on n'est pas obligé de passer par ce mode pour copier-coller du code écrit sur une seule ligne.
 
 ATTENTION : en appuyant sur *ctrl-C* vous killez le spark-shell. Sachant que le *C* est juste à côté du *D*, une mauvaise manip est vite arrivée (oui ça sent le vécu).
 
@@ -86,20 +89,6 @@ scala>   .toDF("name", "age")
 scala>
 ```
 On remarque que Spark considère chaque ligne de notre expression comme une ligne à part entière qui n'est pas liée à la précédente, ce qui signifie pour le spark-shell que la première ligne a du sens mais pas les deux autres. Une erreur est donc levée pour les deux dernières lignes sous la forme `error: illegal start of definition`. Heureusement ce comportement n'est pas présent lorsqu'on exécute un fichier directement.
-
-Dans la suite du TP, on utilisera la notation
-```scala
-scala> monExpression
-```
-dans le cas où *monExpression* ne fait qu'une seule ligne et pour voir, généralement, ce qui est retourné par le spark-shell. Dans le cas où plusieurs lignes sont présentes, on utilisera la notation
-```scala
-monExpression
-  .qui
-  .fait
-  .plusieurs
-  .lignes
-```
-sans le prompt *scala>*.
 
 ## SparkContext vs SparkSession
 
