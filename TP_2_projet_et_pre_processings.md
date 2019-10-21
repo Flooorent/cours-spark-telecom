@@ -112,7 +112,7 @@ val df: DataFrame = spark
   .read
   .option("header", true) // utilise la première ligne du (des) fichier(s) comme header
   .option("inferSchema", "true") // pour inférer le type de chaque colonne (Int, String, etc.)
-  .csv("/Users/flo/Documents/github/cours-spark-telecom/data/train_clean.csv"")
+  .csv("/Users/flo/Documents/github/cours-spark-telecom/data/train_clean.csv")
 ```
 
 Affichez le nombre de lignes et le nombre de colonnes dans le DataFrame :
