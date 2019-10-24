@@ -135,7 +135,7 @@ Assignez le type *Int* aux colonnes qui vous semblent contenir des entiers :
 ```scala
 val dfCasted: DataFrame = df
   .withColumn("goal", $"goal".cast("Int"))
-  .withColumn("deadline" , $"deadline".cast("Int"))
+  .withColumn("deadline", $"deadline".cast("Int"))
   .withColumn("state_changed_at", $"state_changed_at".cast("Int"))
   .withColumn("created_at", $"created_at".cast("Int"))
   .withColumn("launched_at", $"launched_at".cast("Int"))
